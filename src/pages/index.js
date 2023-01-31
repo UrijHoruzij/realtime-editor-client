@@ -5,6 +5,7 @@ import Prism from 'prismjs';
 const Home = () => {
 	const ws = useRef(null);
 	const [value, setValue] = useState(``);
+	const [error, setError] = useState(false);
 	useEffect(() => {
 		Prism.highlightAll();
 	}, [value]);
@@ -20,6 +21,7 @@ const Home = () => {
 			setValue(e.data.toString());
 		};
 		ws.current.onerror = (error) => {
+			setError(true);
 			console.log(error.message);
 		};
 		return () => {
@@ -28,8 +30,8 @@ const Home = () => {
 	}, []);
 	const changeCode = (e) => {
 		const text = e.target.value;
-		ws.current.send(text.toString());
 		setValue(`${text}`);
+		if (!error) ws.current.send(text.toString());
 	};
 	return (
 		<>
